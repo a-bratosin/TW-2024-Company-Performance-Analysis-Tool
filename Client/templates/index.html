@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Company-Performance-Analysis-Tool</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+
+    <body>
+        <h1>Company Performance Analysis Tool</h1>
+        <h2>Search company statistics</h2>
+        <div class="header_search_form">
+            <form name="frmSearch" method="post">
+                <input type="text" required maxlength="150" size="20" 
+                placeholder="Company name or CUI" 
+                class="form-control" name="searchfor" 
+                pattern="^(.)*[A-Za-z0-9][A-Za-z0-9](.)*$">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+    </body>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</html>
