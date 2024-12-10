@@ -9,14 +9,12 @@
         <h1>Company Performance Analysis Tool</h1>
         <h2>Search company statistics</h2>
         <div class="header_search_form">
-            <form name="frmSearch">
-                <input type="text" class="form-control" id="search_field" 
-                placeholder="Company name or CUI" 
-                required maxlength="150" size="20">
-                <button class="btn btn-primary" id="search_button">Search</button>
-            </form>
+            <input type="text" class="form-control" id="search_field" 
+            placeholder="Company name or CUI" 
+            required maxlength="150" size="20">
+            <button class="btn btn-primary" id="search_button">Search</button>
         </div>
-    </body>
 
-    <script src="{{ url_for('static', filename='index.js') }}"></script>
+        <script src="{{ url_for('static', filename='index.js') }}"></script>
+    </body>
 </html>
