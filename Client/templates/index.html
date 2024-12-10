@@ -9,15 +9,14 @@
         <h1>Company Performance Analysis Tool</h1>
         <h2>Search company statistics</h2>
         <div class="header_search_form">
-            <form name="frmSearch" method="post">
-                <input type="text" required maxlength="150" size="20" 
+            <form name="frmSearch">
+                <input type="text" class="form-control" id="search_field" 
                 placeholder="Company name or CUI" 
-                class="form-control" name="searchfor" 
-                pattern="^(.)*[A-Za-z0-9][A-Za-z0-9](.)*$">
-                <button type="submit" class="btn btn-primary">Search</button>
+                required maxlength="150" size="20">
+                <button class="btn btn-primary" id="search_button">Search</button>
             </form>
         </div>
     </body>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='index.js') }}"></script>
 </html>

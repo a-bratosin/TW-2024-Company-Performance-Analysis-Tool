@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 import requests
 import json
 
-economic_url = ''
+target_url = ''
 parser_url = ''
 
 app = Flask(__name__)
@@ -10,7 +10,7 @@ app = Flask(__name__)
 @app.route('/get_page', methods=['POST'])
 def get_page():
     req = request.json
-    # page = requests.get(economic_url)
+    # page = requests.get(target_url)
     # req = requests.post(parser_url)
     return jsonify({"msg": "Page successfully scrapped!"})
 
