@@ -1,23 +1,93 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import time
 
-#no more need for get_page and start() because biutifulsoup on top this works
+# no more need for get_page and start() because biutifulsoup on top this works
 
-def get_url(): #honestly idk if I should search by categ or by name
+
+def get_categories(): # get all categories in map output
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+
+    driver = webdriver.Chrome(options=chrome_options)
+    driver.get('https://www.listafirme.ro/firme-domenii.asp?url=/21/d3.htm')
+
+    SCROLL_PAUSE_TIME = 3
+    last_height = driver.execute_script("return document.body.scrollHeight")
+
+    while True:
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(SCROLL_PAUSE_TIME)
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        if new_height == last_height:
+            break
+        last_height = new_height
+
+    html_source = driver.page_source
+    soup = BeautifulSoup(html_source, 'html.parser')
+
+    data = {}
+    tree_div = soup.find('div', id='treeDiv1')
+    if tree_div:
+        links = tree_div.find_all('a')
+        for link in links:
+            href = link.get('href')
+            if href and href.startswith('/'):
+                number = href.split('/')[1]
+                text = link.text.strip()
+                text = text.split(' ', 1)[1] if ' ' in text else text
+                data[number] = text
+                #literal python magic
+
+    driver.quit()
+
+    return data #data is a map of category number to category full name
+
+
+def get_urls(categ_nr):  # search by category number
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+
+    driver = webdriver.Chrome(options=chrome_options)
+    url = f'https://www.listafirme.ro/{categ_nr}/d1.htm'
+    driver.get(url)
+
+    SCROLL_PAUSE_TIME = 3
+    last_height = driver.execute_script("return document.body.scrollHeight")
+
+    while True:
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(SCROLL_PAUSE_TIME)
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        if new_height == last_height:
+            break
+        last_height = new_height
+
+    html_source = driver.page_source
+    soup = BeautifulSoup(html_source, 'html.parser')
+
     url_arr = []
-    #TO DO
-    return  url_arr
+    base_url = 'https://www.listafirme.ro'
+    rows = soup.find_all('td', class_='clickable-row')
+    for row in rows:
+        data_href = row.get('data-href')
+        if data_href:
+            full_url = base_url + data_href
+            url_arr.append(full_url)
+
+    driver.quit()
+    return url_arr
 
 def scrape_data(url):
     driver = webdriver.Chrome()
     driver.get(url)
 
-    #scroll and sleeping 3 sec in case of lag
+    # scroll and sleeping 3 sec in case of lag
     SCROLL_PAUSE_TIME = 3
     last_height = driver.execute_script("return document.body.scrollHeight")
 
-    #trying really hard to scroll
+    # trying really hard to scroll
     while True:
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(SCROLL_PAUSE_TIME)
@@ -30,8 +100,8 @@ def scrape_data(url):
     soup = BeautifulSoup(html_source, 'html.parser')
     table = soup.find('table', class_='table table-bordered table-striped table-white table-bilant')
 
-    #data is an array of the table contents but all even positions are indicators
-    #for processing we will only use the odd positions
+    # data is an array of the table contents but all even positions are indicators
+    # for processing we will only use the odd positions
     data = []
     for row in table.find_all('tr')[1:]:
         cols = row.find_all('td')
@@ -56,4 +126,4 @@ def scrape_data(url):
             })
 
     driver.quit()
-    return data
+    return data #data is an array that acts like a map but use odd positions for row data vector
