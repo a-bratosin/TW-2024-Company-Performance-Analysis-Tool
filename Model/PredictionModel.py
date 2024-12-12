@@ -23,7 +23,16 @@ joblib.dump(model, 'model_obj.pkl')
 
 
 # citesc datele cu pandas, apoi le convertesc în numpy ptc îmi este mult mai ușor așa să lucrez cu linii și coloane
+
 company_data = pd.read_csv(data_file).to_numpy()
+original_data = company_data.copy()
+
+company_data = company_data[1:,:]
+print(company_data)
+
+
+# algoritmul practic îmi face regresie liniară pt ani și restul datelor: pt un anumit an, îmi dă statisticile prezise
+
 #primul lucru pe care îl fac este să centrez anii în jurul valorii de mijloc
 middle_year_index = math.floor((company_data.shape[0])/2)
 middle_year = int(company_data[middle_year_index][0])
@@ -37,13 +46,63 @@ for i in range(company_data.shape[0]):
 
 print(company_data[:,1:])
 print(company_data[:,1:].shape)
-X = company_data[:,1:]
+# momentan aici includ și income-ul, am TODO ca să-l scot
+# dacă chestia cu val proprii nu merge pt determinarea profitului, atunci o să folosesc direct alg ăsta (poate mai pun un coeficient)
+data_points = company_data[:,1:]
+types_of_data = data_points.shape[1]
+training_data_count = data_points.shape[0]
+print(types_of_data)
+print(training_data_count)
 
 print(company_data[:,0])
 print(company_data[:,0].shape)
-y = company_data[:,0]
+years = company_data[:,0]
 
+
+np.set_printoptions(formatter={'float_kind':'{:f}'.format})
+
+# A - training data matrix for linear regression
+A = np.ones((training_data_count, 2))
+A[:,0] = years
+print("-----------A matrix-------------------------")
+print(A)
+
+reg = LinearRegression().fit(A, data_points)
+print("----------cu scikit-------------")
+print(reg.coef_)
+
+
+coeficients = np.linalg.pinv(A)@data_points
+print("----------cu pseudoinversa-------------")
+print(coeficients)
+
+
+
+desired_year = 2023 - middle_year
+estimated_result = coeficients[0,:]*desired_year + coeficients[1,:]
+print("---------rezultatul estimat pt 2023------------")
+print(np.floor(estimated_result))
+
+print("\n-------------rezultatul real pt 2023-----------")
+print(original_data[0,1:])
+
+print("\n--------------diferența-------------------")
+print(np.abs(original_data[0,1:]-np.floor(estimated_result)))
+
+"""
 reg = LinearRegression().fit(X,y)
 print(reg.coef_)
-#print(date_firma.head())
-#print(date_firma["Year"][3])
+
+reg.predict(desired_year)
+"""
+
+
+# aici trebuie să procesez matricile de input pt regresie liniară astfel încât să obțin o matrice kx5 (k fiind numărul de trăsături ale companiei care ne interesează)
+# vezi foaia cu demonstația/documentul pe care o să-l scriu despre algoritm (dacă am timp)
+# nu știu dacă îmi permite Scikit să fac un calcul de genul; dacă nu, doar fac pseudoinversa
+
+# în predicție acum am eliminat anul 2023
+# acum o să fac predicție pt anul 2023 și să compar pt a testa acuratețea
+
+
+
