@@ -10,9 +10,11 @@ class PredictionModel:
         return 0
 
     def predict(self, id: int):
-        data = {
-            'name': 'Enel'
-        }
+        data = [
+            (0, 123),
+            (1, 293),
+            (3, 141)
+        ]
         return data
 
 model = PredictionModel()
@@ -30,8 +32,10 @@ def get_by_name(company: str):
 
 @app.route('/predict/<int:cui>')
 def get_by_id(cui: int):
-    prediction = model.predict(cui)
-    return render_template('screener.html', **prediction)
+    data = model.predict(cui)
+    labels = [row[0] for row in data]
+    values = [row[1] for row in data]
+    return render_template('screener.j.html', labels=labels, values=values)
 
 if __name__ == '__main__':
     app.run(debug=True)

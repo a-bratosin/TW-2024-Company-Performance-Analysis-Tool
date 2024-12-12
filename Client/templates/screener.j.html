@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Company-Performance-Analysis-Tool</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-        <!-- <link rel="stylesheet" href="../static/style.css"> -->
     </head>
 
     <body>
@@ -13,8 +14,12 @@
 
         <main>
             <h2>Statistics for {{ name }}</h2>
+
+            <canvas id="evolution-chart"></canvas>
         </main>
 
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="{{ url_for('static', filename='screener.js') }}"></script>
+        <script>init({{ labels }}, {{ values }})</script>
     </body>
 </html>
