@@ -1,10 +1,20 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>Company-Performance-Analysis-Tool</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <!-- <link rel="stylesheet" href="../static/style.css"> -->
     </head>
 
     <body>
-        <h1>Statistics for {%  %}</h1>
+        <header>
+            <h1>Company Performance Analysis Tool</h1>
+        </header>
+
+        <main>
+            <h2>Statistics for {{ name }}</h2>
+        </main>
+
+        <script src="{{ url_for('static', filename='screener.js') }}"></script>
     </body>
 </html>

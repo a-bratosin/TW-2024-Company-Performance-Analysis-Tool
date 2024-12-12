@@ -6,15 +6,19 @@
     </head>
 
     <body>
-        <h1>Company Performance Analysis Tool</h1>
-        <h2>Search company statistics</h2>
-        <div class="header_search_form">
-            <input type="text" class="form-control" id="search_field" 
-            placeholder="Company name or CUI" 
-            required maxlength="150" size="20">
-            <button class="btn btn-primary" id="search_button">Search</button>
-        </div>
+        <header>
+            <h1>Company Performance Analysis Tool</h1>
+        </header>
+        
+        <main class="centered">
+            <h2>Browse company statistics</h2>
 
+            <form id="search-form" action="" onsubmit="return false">
+                <input type="text" id="search-field" name="company" placeholder="Company name or CUI" required maxlength="130">
+                <input type="submit" id="search-button" value="Predict">
+            </form>
+        </main>
+        
         <script src="{{ url_for('static', filename='index.js') }}"></script>
     </body>
 </html>
