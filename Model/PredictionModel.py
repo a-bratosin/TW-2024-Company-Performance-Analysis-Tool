@@ -3,6 +3,8 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 import pandas as pd
 import math
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 data_file = 'Model/data_sample.csv'
 
@@ -30,6 +32,11 @@ original_data = company_data.copy()
 company_data = company_data[1:,:]
 print(company_data)
 
+
+df = pd.read_csv(data_file)
+plt.figure(figsize = (8,5))
+sns.heatmap(df.corr(), cbar = False, annot = True)
+plt.show() 
 
 # algoritmul practic îmi face regresie liniară pt ani și restul datelor: pt un anumit an, îmi dă statisticile prezise
 
@@ -82,6 +89,8 @@ A[:,0] = years
 print("-----------A matrix-------------------------")
 print(A)
 
+
+
 reg = LinearRegression().fit(A, data_points)
 print("----------cu scikit-------------")
 print(reg.coef_)
@@ -92,6 +101,16 @@ print("----------cu pseudoinversa-------------")
 print(coeficients)
 
 
+
+
+"""
+coeficients = np.zeros((2, types_of_data))
+for i in range(0,types_of_data):
+    reg = LinearRegression().fit(years.reshape(-1,1), data_points[:,i])
+    print(reg.coef_)
+    coeficients[0,i] = reg.coef_
+    coeficients[1,i] = reg.intercept_
+"""
 
 
 desired_year = 2023 - middle_year
@@ -108,6 +127,9 @@ print(original_data[0,2:])
 
 print("\n--------------diferența-------------------")
 print(np.abs(original_data[0,2:]-np.floor(estimated_result)))
+
+print("\n-------------- procent eroare-----------")
+print(np.divide(np.abs(original_data[0,2:]-np.floor(estimated_result)) , original_data[0,2:]))
 
 """
 reg = LinearRegression().fit(X,y)
