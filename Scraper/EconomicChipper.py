@@ -80,7 +80,9 @@ def get_urls(categ_nr):  # search by category number
     return url_arr
 
 def scrape_data(url):
-    driver = webdriver.Chrome()
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    driver = webdriver.Chrome(options=chrome_options)
     driver.get(url)
 
     # scroll and sleeping 3 sec in case of lag
@@ -127,3 +129,22 @@ def scrape_data(url):
 
     driver.quit()
     return data #data is an array that acts like a map but use odd positions for row data vector
+
+#sample data for ml testing
+import csv
+
+category_map=get_categories()
+#print(category_map)
+#print('----------------')
+urls=get_urls('01')
+#print(urls)
+#print('----------------')
+data=scrape_data(urls[0])
+print(data)
+# writing into a csv
+file=open('data_sample.csv','w', newline='')
+writer = csv.writer(file)
+writer.writerow(data[0].keys())
+for row in data:
+    writer.writerow(row.values())
+file.close()
