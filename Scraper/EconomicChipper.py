@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 import time
 
@@ -127,45 +128,57 @@ def scrape_data(url):
                 'Angajati': angajati
             })
 
+    username_input = driver.find_elements(By.XPATH, "//th[contains(text(), 'Domeniul de activitate preponderent (raportat în bilanț)')]//parent::tr//parent::tbody//tr//td")   
+    print("test")
+    #print(username_input)   
+    #print(username_input[1].get_attribute('innerHTML'))
+    
+    category = username_input[1].get_attribute('innerHTML')[:2]
     driver.quit()
-    return data #data is an array that acts like a map but use odd positions for row data vector
+    return (data,category) #data is an array that acts like a map but use odd positions for row data vector
 
 #sample data for ml testing
 import csv
 
-category_map=get_categories()
-print(category_map)
+
 #print('----------------')
 #urls=get_urls('01')
 #print(urls)
 #print('----------------')
 
 
-scraped_categories = {'01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33', '34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63','64','65','66','67','68','69','70','71','72','73'}
-print(category_map.keys())
-for company_category in category_map.keys():
-    if(company_category[0]=='a'): continue
+def get_category_data():
+    category_map=get_categories()
+    print(category_map)
 
-    if(company_category in scraped_categories): continue
-    #print(company_category)
-    urls=get_urls(company_category)
-    
-    print("\n\n\n----------SCRAPING DATA FOR CATEGORY "+company_category+"----------\n\n\n")
+    scraped_categories = {'01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33', '34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63','64','65','66','67','68','69','70','71','72','73'}
+    print(category_map.keys())
+    for company_category in category_map.keys():
+        if(company_category[0]=='a'): continue
 
-    data_file = 'data_'+company_category+'.csv'
-    print(data_file)
-    for i in range(min(8, len(urls))):
-        print("getting element #"+str(i)+" from list")
-        data=scrape_data(urls[i])
-        print(data)
-        # writing into a csv
-        file=open(data_file,'a', newline='')
-        writer = csv.writer(file)
+        if(company_category in scraped_categories): continue
+        #print(company_category)
+        urls=get_urls(company_category)
         
-        if i == 0:
-            writer.writerow(data[0].keys())
-        for row in data:
-            writer.writerow(row.values())
-        file.close()
+        print("\n\n\n----------SCRAPING DATA FOR CATEGORY "+company_category+"----------\n\n\n")
 
-#am să fac mai întâi o probă cu 10 elemente din categoria 1
+        data_file = 'data_'+company_category+'.csv'
+        print(data_file)
+        for i in range(min(8, len(urls))):
+            print("getting element #"+str(i)+" from list")
+            data=scrape_data(urls[i])[0]
+            print(data)
+            # writing into a csv
+            file=open(data_file,'a', newline='')
+            writer = csv.writer(file)
+            
+            if i == 0:
+                writer.writerow(data[0].keys())
+            for row in data:
+                writer.writerow(row.values())
+            file.close()
+
+    #am să fac mai întâi o probă cu 10 elemente din categoria 1
+
+
+print(scrape_data("https://www.listafirme.ro/frigoalex-service-srl-12527501/")[1])
