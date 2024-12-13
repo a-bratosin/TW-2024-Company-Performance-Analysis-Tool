@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
+import pandas as pd
 import time
 
 # no more need for get_page and start() because biutifulsoup on top this works
@@ -134,6 +135,7 @@ def scrape_data(url):
     #print(username_input[1].get_attribute('innerHTML'))
     
     category = username_input[1].get_attribute('innerHTML')[:2]
+    
     driver.quit()
     return (data,category) #data is an array that acts like a map but use odd positions for row data vector
 
@@ -180,5 +182,21 @@ def get_category_data():
 
     #am să fac mai întâi o probă cu 10 elemente din categoria 1
 
+#print(scrape_data("https://www.listafirme.ro/frigoalex-service-srl-12527501/")[1])
 
-print(scrape_data("https://www.listafirme.ro/frigoalex-service-srl-12527501/")[1])
+def sanitise_input():
+    categories = get_categories().keys()
+    
+
+    for category_key in categories:
+
+        if(category_key[0]=='a'): continue
+        excluded_keys = {'33','73'}
+        if(category_key in excluded_keys): continue
+
+        data_file = 'data/data_'+category_key+'.csv'
+        df = pd.read_csv(data_file)
+        print(df.isnull().sum())
+
+sanitise_input()
+
