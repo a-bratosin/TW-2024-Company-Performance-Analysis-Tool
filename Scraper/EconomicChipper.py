@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import pandas as pd
 import time
@@ -199,4 +201,33 @@ def sanitise_input():
         print(df.isnull().sum())
 
 sanitise_input()
+
+def get_url_by_search(search_term):
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+
+    driver = webdriver.Chrome(options=chrome_options)
+    url = 'https://www.listafirme.ro/'
+    driver.get(url)
+
+
+    search_box = driver.find_element(By.NAME, 'searchfor')
+    search_box.send_keys(search_term)
+    search_box.submit()
+
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'clickable-row')))
+
+    html_source = driver.page_source
+    soup = BeautifulSoup(html_source, 'html.parser')
+
+    base_url = 'https://www.listafirme.ro'
+    first_row = soup.find('td', class_='clickable-row')
+    first_url = None
+    if first_row:
+        data_href = first_row.get('data-href')
+        if data_href:
+            first_url = base_url + data_href
+
+    driver.quit()
+    return first_url
 
