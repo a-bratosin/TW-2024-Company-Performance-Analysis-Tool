@@ -12,6 +12,7 @@ class PredictionModel:
         for row in company_data:
             self.previous_data.append([int(x) for x in row])
         self.previous_data.reverse()
+        self.final_year = int(company_data[0, 0])
 
         df = pd.read_csv(data_file)
         plt.figure(figsize=(8,5))
@@ -36,31 +37,20 @@ class PredictionModel:
 
         self.coeficients = np.linalg.pinv(A) @ data_points
         self.middle_year = middle_year
-    
-    def find(self, name: str) -> int:
-        return 9
-
-    def name_of(self, id: int) -> str:
-        return 'Enel'
 
     def predict(self, id: int):
-        data_file = '../data_' + f'{id:02}' + '.csv'
+        #data_file = '../data_' + f'{id:02}' + '.csv'
+        data_file = 'data_cache.csv'
         self.__generate_coeficients__(data_file)
 
         data = self.previous_data
-        for i in range(0, 3):
-            desired_year = 2024 - self.middle_year + i
+        for i in range(1, 4):
+            desired_year = self.final_year - self.middle_year + i
             estimated_result = self.coeficients[0,:] * desired_year + self.coeficients[1,:]
             estimated_result[0:-1] = estimated_result[0:-1] * 1000.0
             estimated_result = [int(num) for num in estimated_result]
-            estimated_result.insert(0, 2024 + i)
+            estimated_result.insert(0, self.final_year + i)
             data.append(estimated_result)
-        
-        # data = [
-        #     (2016, 123),
-        #     (2017, 293),
-        #     (2018, 141)
-        # ]
 
         return data
 
