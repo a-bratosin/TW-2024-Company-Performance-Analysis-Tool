@@ -184,19 +184,22 @@ def get_category_data():
 
 #print(scrape_data("https://www.listafirme.ro/frigoalex-service-srl-12527501/")[1])
 
-def sanitise_input():
-    categories = get_categories().keys()
-    
+def remove_zeros():
+    categories = get_categories().keys() 
 
     for category_key in categories:
-
         if(category_key[0]=='a'): continue
         excluded_keys = {'33','73'}
         if(category_key in excluded_keys): continue
 
         data_file = 'data/data_'+category_key+'.csv'
         df = pd.read_csv(data_file)
-        print(df.isnull().sum())
+        
+        mask = df['Cifra Afaceri'] == 0
+        df = df[~mask]
+        df.to_csv(data_file, index=False)
+        print(df)
+
 
 sanitise_input()
 
