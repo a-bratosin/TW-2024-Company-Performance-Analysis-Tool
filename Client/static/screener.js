@@ -19,8 +19,12 @@ function drawChart() {
         data: {
             labels: labels,
             datasets: [{
-                label: 'data1',
+                label: 'Turnover',
                 data: values,
+                segment: {
+                    borderDash: ctx => (ctx.p0.label > 2023 || ctx.p1.label > 2023 ? [6, 6] : undefined)
+                },
+                spanGaps: true
             }]
         },
         options: {

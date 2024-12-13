@@ -13,7 +13,10 @@ def home():
 @app.route('/predict/<string:company>')
 def get_by_name(company: str):
     cui = model.find(company)
-    return get_by_id(cui, company)
+    if cui:
+        return get_by_id(cui, company)
+    else:
+        return home()
 
 @app.route('/predict/<int:cui>')
 def get_by_id(cui: int, name: str = None):
