@@ -134,17 +134,38 @@ def scrape_data(url):
 import csv
 
 category_map=get_categories()
-#print(category_map)
+print(category_map)
 #print('----------------')
-urls=get_urls('01')
+#urls=get_urls('01')
 #print(urls)
 #print('----------------')
-data=scrape_data(urls[0])
-print(data)
-# writing into a csv
-file=open('data_sample.csv','w', newline='')
-writer = csv.writer(file)
-writer.writerow(data[0].keys())
-for row in data:
-    writer.writerow(row.values())
-file.close()
+
+
+scraped_categories = {'01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33', '34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63','64','65','66','67','68','69','70','71','72','73'}
+print(category_map.keys())
+for company_category in category_map.keys():
+    if(company_category[0]=='a'): continue
+
+    if(company_category in scraped_categories): continue
+    #print(company_category)
+    urls=get_urls(company_category)
+    
+    print("\n\n\n----------SCRAPING DATA FOR CATEGORY "+company_category+"----------\n\n\n")
+
+    data_file = 'data_'+company_category+'.csv'
+    print(data_file)
+    for i in range(min(8, len(urls))):
+        print("getting element #"+str(i)+" from list")
+        data=scrape_data(urls[i])
+        print(data)
+        # writing into a csv
+        file=open(data_file,'a', newline='')
+        writer = csv.writer(file)
+        
+        if i == 0:
+            writer.writerow(data[0].keys())
+        for row in data:
+            writer.writerow(row.values())
+        file.close()
+
+#am să fac mai întâi o probă cu 10 elemente din categoria 1
