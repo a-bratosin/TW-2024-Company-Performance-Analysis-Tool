@@ -21,7 +21,8 @@ function drawChart() {
             datasets: [{
                 label: 'data1',
                 data: values,
-            }]
+                tension: 0.2
+            }],
         },
         options: {
             plugins: {

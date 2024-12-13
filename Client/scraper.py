@@ -6,8 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import pandas as pd
 import time
-import math
-import joblib
+
 # no more need for get_page and start() because biutifulsoup on top this works
 
 
@@ -167,7 +166,7 @@ def get_category_data():
         
         print("\n\n\n----------SCRAPING DATA FOR CATEGORY "+company_category+"----------\n\n\n")
 
-        data_file = 'data_'+company_category+'.csv'
+        data_file = '../data/data_'+company_category+'.csv'
         print(data_file)
         for i in range(min(8, len(urls))):
             print("getting element #"+str(i)+" from list")
@@ -199,7 +198,7 @@ def remove_zeros():
         excluded_keys = {'33','73'}
         if(category_key in excluded_keys): continue
 
-        data_file = 'data/data_'+category_key+'.csv'
+        data_file = '../data/data_'+category_key+'.csv'
         df = pd.read_csv(data_file)
         
         mask = df['Cifra Afaceri'] == 0
@@ -207,48 +206,67 @@ def remove_zeros():
         df.to_csv(data_file, index=False)
         print(df)
 
-#sanitise_input()
-def get_averages():
 def parse_employees():
     categories = get_categories().keys() 
-    
 
-    
     for category_key in categories:
-        # valorile am să le stochez într- hashmap de forma an - listă cu mediile din acel an
-        averages_map = {}
-
         if(category_key[0]=='a'): continue
-        excluded_keys = {'33','73','65'}
+        excluded_keys = {'33','73'}
         if(category_key in excluded_keys): continue
-        
-        print("\n\n-------- CATEGORIA "+category_key+"--------\n\n")
-        data_file = 'data/data_'+category_key+'.csv'
+
+        data_file = '../data/data_'+category_key+'.csv'
         df = pd.read_csv(data_file)
-
-        grouped_df = df.groupby(df['Year']).mean().reset_index()
-
-        print("\n------------mean------------\n")
-        print(grouped_df)
-
-        for year_average in grouped_df.itertuples():
-            averages_list = [0,0,0,0,0,0,0]
-            averages_list[0] = math.floor(year_average[2])
-            averages_list[1] = math.floor(year_average[3])
-            averages_list[2] = math.floor(year_average[4])
-            averages_list[3] = math.floor(year_average[5])
-            averages_list[4] = math.floor(year_average[6])
-            averages_list[5] = math.floor(year_average[7])
-            averages_list[6] = math.floor(year_average[])
-            averages_map[year_average[0]] = averages_list
         
-        print(averages_map)
+        #mask = df['Cifra Afaceri'] == 0
+        #df = df[~mask]
+        #df.to_csv(data_file, index=False)
+        #print(df)
 
-        averages_file = "average_data"+category_key+".pkl"
-        joblib.dump(averages_map, averages_file)
+        if df['Angajati'].dtypes=='object':
+            #print(df['Angajati'])
+            for i in df.itertuples():
+                try:
+                    print(int(i[8]))
+                except(ValueError):
+                    # dacă nu merge, atunci e nr de 4 cifre și l-a salvat prost
+                    if(len(i[8])==6):
+                        number = int(i[8][0])*10000 + int(i[8][1])*1000 + int(i[8][3])*100 + int(i[8][4])*10 + int(i[8][5])
+                    else: # dacă nu e 5 cifre, e de 4
+                        number = int(i[8][0])*1000 + int(i[8][2])*100 + int(i[8][3])*10 + int(i[8][4])
+                    print("needs to change")
+                    print(number)
+                    df.loc[i[0], 'Angajati'] = number
+        df.to_csv(data_file, index=False)
+            
 
+def parse_employees_cache():
 
-get_averages()
+    data_file = './data_cache.csv'
+    df = pd.read_csv(data_file)
+    
+    #mask = df['Cifra Afaceri'] == 0
+    #df = df[~mask]
+    #df.to_csv(data_file, index=False)
+    #print(df)
+
+    if df['Angajati'].dtypes=='object':
+        #print(df['Angajati'])
+        for i in df.itertuples():
+            try:
+                print(int(i[8]))
+            except(ValueError):
+                # dacă nu merge, atunci e nr de 4 cifre și l-a salvat prost
+                if(len(i[8])==6):
+                    number = int(i[8][0])*10000 + int(i[8][1])*1000 + int(i[8][3])*100 + int(i[8][4])*10 + int(i[8][5])
+                else: # dacă nu e 5 cifre, e de 4
+                    number = int(i[8][0])*1000 + int(i[8][2])*100 + int(i[8][3])*10 + int(i[8][4])
+                print("needs to change")
+                print(number)
+                df.loc[i[0], 'Angajati'] = number
+    df.to_csv(data_file, index=False)
+
+# parse_employees()
+# remove_zeros()
 
 def get_url_by_search(search_term):
     chrome_options = Options()
