@@ -187,10 +187,6 @@ def get_category_data():
 
 #print(scrape_data("https://www.listafirme.ro/frigoalex-service-srl-12527501/")[1])
 
-def sanitise_input():
-    categories = get_categories().keys()
-    #andrei's code
-
 def remove_zeros():
     categories = get_categories().keys() 
 
@@ -207,15 +203,8 @@ def remove_zeros():
         df.to_csv(data_file, index=False)
         print(df)
 
-#sanitise_input()
 def get_averages():
-<<<<<<< Updated upstream
     categories = get_categories().keys() 
-    
-
-=======
-    categories = get_categories().keys()     
->>>>>>> Stashed changes
     
     for category_key in categories:
         # valorile am să le stochez într- hashmap de forma an - listă cu mediile din acel an
