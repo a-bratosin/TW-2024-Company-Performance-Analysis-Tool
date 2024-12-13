@@ -12,11 +12,6 @@ model = PredictionModel()
 def home():
     return render_template('index.html')
 
-# @app.route('/predict/<string:company>')
-# def get_by_name(company: str):
-#     cui = model.find(company)
-#     return get_by_id(cui, company)
-
 @app.route('/predict/<company>')
 def get_by_id(company: str):
     url = scraper.get_url_by_search(company)
@@ -34,6 +29,10 @@ def get_by_id(company: str):
     labels = [row[0] for row in data]
     values = [row[1] for row in data]
     return render_template('screener.j.html', name=company, labels=labels, values=values, data=data)
+
+@app.errorhandler(Exception)
+def error(e):
+    return render_template('error.html', error=e)
 
 if __name__ == '__main__':
     app.run(debug=True)
