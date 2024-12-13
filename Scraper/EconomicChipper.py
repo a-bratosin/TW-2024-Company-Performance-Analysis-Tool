@@ -209,7 +209,6 @@ def remove_zeros():
 
 #sanitise_input()
 def get_averages():
-def parse_employees():
     categories = get_categories().keys() 
     
 
@@ -239,8 +238,8 @@ def parse_employees():
             averages_list[3] = math.floor(year_average[5])
             averages_list[4] = math.floor(year_average[6])
             averages_list[5] = math.floor(year_average[7])
-            averages_list[6] = math.floor(year_average[])
-            averages_map[year_average[0]] = averages_list
+            averages_list[6] = math.floor(year_average[8])
+            averages_map[year_average[1]] = averages_list
         
         print(averages_map)
 
