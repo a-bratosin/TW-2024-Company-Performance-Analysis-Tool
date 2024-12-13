@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Company-Performance-Analysis-Tool</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+
+    <body>
+        <header>
+            <h1><span>Company Performance Analysis Tool</span></h1>
+        </header>
+
+        <main>
+            <h2>Statistics for {{ name }}</h2>
+
+            <div class="table-container outlined">
+                <table>
+                    {# {% for item in items %} #}
+                    <tr>
+                        <th>Year</th>
+                        <td>2023</td>
+                    </tr>
+                    <tr>
+                        <th>Income</th>
+                        <td>50000</td>
+                    </tr>
+                    <tr>
+                        <th>Employees</th>
+                        <td>5</td>
+                    </tr>
+                    {# {% endfor %} #}
+                </table>
+            </div>
+
+            <div class="canvas-container outlined">
+                <canvas id="evolution-chart"></canvas>
+            </div>
+
+            <button id="return-button">Return</button>
+        </main>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="{{ url_for('static', filename='screener.js') }}"></script>
+        <script>init({{ labels }}, {{ values }})</script>
+    </body>
+</html>
