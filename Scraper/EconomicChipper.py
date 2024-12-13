@@ -209,9 +209,13 @@ def remove_zeros():
 
 #sanitise_input()
 def get_averages():
+<<<<<<< Updated upstream
     categories = get_categories().keys() 
     
 
+=======
+    categories = get_categories().keys()     
+>>>>>>> Stashed changes
     
     for category_key in categories:
         # valorile am să le stochez într- hashmap de forma an - listă cu mediile din acel an
@@ -278,3 +282,37 @@ def get_url_by_search(search_term):
     driver.quit()
     return first_url
 
+def parse_employees():
+    categories = get_categories().keys() 
+
+    for category_key in categories:
+        if(category_key[0]=='a'): continue
+        excluded_keys = {'33','73'}
+        if(category_key in excluded_keys): continue
+
+        data_file = 'data/data_'+category_key+'.csv'
+        df = pd.read_csv(data_file)
+        
+        #mask = df['Cifra Afaceri'] == 0
+        #df = df[~mask]
+        #df.to_csv(data_file, index=False)
+        #print(df)
+
+        if df['Angajati'].dtypes=='object':
+            #print(df['Angajati'])
+            for i in df.itertuples():
+                try:
+                    print(int(i[8]))
+                except(ValueError):
+                    # dacă nu merge, atunci e nr de 4 cifre și l-a salvat prost
+                    if(len(i[8])==6):
+                        number = int(i[8][0])*10000 + int(i[8][1])*1000 + int(i[8][3])*100 + int(i[8][4])*10 + int(i[8][5])
+                    else: # dacă nu e 5 cifre, e de 4
+                        number = int(i[8][0])*1000 + int(i[8][2])*100 + int(i[8][3])*10 + int(i[8][4])
+                    print("needs to change")
+                    print(number)
+                    df.loc[i[0], 'Angajati'] = number
+        df.to_csv(data_file, index=False)
+            
+
+parse_employees()
