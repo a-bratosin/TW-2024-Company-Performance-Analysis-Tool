@@ -28,6 +28,7 @@ def get_by_id(company: str):
     for row in raw_data:
         writer.writerow(row.values())
     file.close()
+    scraper.parse_employees_cache()
 
     data = model.predict(0)
     labels = [row[0] for row in data]

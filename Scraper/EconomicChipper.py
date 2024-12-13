@@ -206,9 +206,6 @@ def remove_zeros():
         df.to_csv(data_file, index=False)
         print(df)
 
-<<<<<<< Updated upstream
-sanitise_input()
-=======
 def parse_employees():
     categories = get_categories().keys() 
 
@@ -244,7 +241,6 @@ def parse_employees():
 
 parse_employees()
 #remove_zeros()
->>>>>>> Stashed changes
 
 def get_url_by_search(search_term):
     chrome_options = Options()

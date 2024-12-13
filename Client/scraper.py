@@ -166,7 +166,7 @@ def get_category_data():
         
         print("\n\n\n----------SCRAPING DATA FOR CATEGORY "+company_category+"----------\n\n\n")
 
-        data_file = 'data_'+company_category+'.csv'
+        data_file = '../data/data_'+company_category+'.csv'
         print(data_file)
         for i in range(min(8, len(urls))):
             print("getting element #"+str(i)+" from list")
@@ -198,7 +198,7 @@ def remove_zeros():
         excluded_keys = {'33','73'}
         if(category_key in excluded_keys): continue
 
-        data_file = 'data/data_'+category_key+'.csv'
+        data_file = '../data/data_'+category_key+'.csv'
         df = pd.read_csv(data_file)
         
         mask = df['Cifra Afaceri'] == 0
@@ -206,7 +206,67 @@ def remove_zeros():
         df.to_csv(data_file, index=False)
         print(df)
 
-sanitise_input()
+def parse_employees():
+    categories = get_categories().keys() 
+
+    for category_key in categories:
+        if(category_key[0]=='a'): continue
+        excluded_keys = {'33','73'}
+        if(category_key in excluded_keys): continue
+
+        data_file = '../data/data_'+category_key+'.csv'
+        df = pd.read_csv(data_file)
+        
+        #mask = df['Cifra Afaceri'] == 0
+        #df = df[~mask]
+        #df.to_csv(data_file, index=False)
+        #print(df)
+
+        if df['Angajati'].dtypes=='object':
+            #print(df['Angajati'])
+            for i in df.itertuples():
+                try:
+                    print(int(i[8]))
+                except(ValueError):
+                    # dacă nu merge, atunci e nr de 4 cifre și l-a salvat prost
+                    if(len(i[8])==6):
+                        number = int(i[8][0])*10000 + int(i[8][1])*1000 + int(i[8][3])*100 + int(i[8][4])*10 + int(i[8][5])
+                    else: # dacă nu e 5 cifre, e de 4
+                        number = int(i[8][0])*1000 + int(i[8][2])*100 + int(i[8][3])*10 + int(i[8][4])
+                    print("needs to change")
+                    print(number)
+                    df.loc[i[0], 'Angajati'] = number
+        df.to_csv(data_file, index=False)
+            
+
+def parse_employees_cache():
+
+    data_file = './data_cache.csv'
+    df = pd.read_csv(data_file)
+    
+    #mask = df['Cifra Afaceri'] == 0
+    #df = df[~mask]
+    #df.to_csv(data_file, index=False)
+    #print(df)
+
+    if df['Angajati'].dtypes=='object':
+        #print(df['Angajati'])
+        for i in df.itertuples():
+            try:
+                print(int(i[8]))
+            except(ValueError):
+                # dacă nu merge, atunci e nr de 4 cifre și l-a salvat prost
+                if(len(i[8])==6):
+                    number = int(i[8][0])*10000 + int(i[8][1])*1000 + int(i[8][3])*100 + int(i[8][4])*10 + int(i[8][5])
+                else: # dacă nu e 5 cifre, e de 4
+                    number = int(i[8][0])*1000 + int(i[8][2])*100 + int(i[8][3])*10 + int(i[8][4])
+                print("needs to change")
+                print(number)
+                df.loc[i[0], 'Angajati'] = number
+    df.to_csv(data_file, index=False)
+
+# parse_employees()
+# remove_zeros()
 
 def get_url_by_search(search_term):
     chrome_options = Options()
@@ -236,3 +296,4 @@ def get_url_by_search(search_term):
 
     driver.quit()
     return first_url
+
