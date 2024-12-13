@@ -9,13 +9,36 @@
 
     <body>
         <header>
-            <h1>Company Performance Analysis Tool</h1>
+            <h1><span>Company Performance Analysis Tool</span></h1>
         </header>
 
         <main>
             <h2>Statistics for {{ name }}</h2>
 
-            <canvas id="evolution-chart"></canvas>
+            <div class="table-container outlined">
+                <table>
+                    {# {% for item in items %} #}
+                    <tr>
+                        <th>Year</th>
+                        <td>2023</td>
+                    </tr>
+                    <tr>
+                        <th>Income</th>
+                        <td>50000</td>
+                    </tr>
+                    <tr>
+                        <th>Employees</th>
+                        <td>5</td>
+                    </tr>
+                    {# {% endfor %} #}
+                </table>
+            </div>
+
+            <div class="canvas-container outlined">
+                <canvas id="evolution-chart"></canvas>
+            </div>
+
+            <button id="return-button">Return</button>
         </main>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
