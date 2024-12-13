@@ -186,6 +186,10 @@ def get_category_data():
 
 #print(scrape_data("https://www.listafirme.ro/frigoalex-service-srl-12527501/")[1])
 
+def sanitise_input():
+    categories = get_categories().keys()
+    #andrei's code
+
 def remove_zeros():
     categories = get_categories().keys() 
 
@@ -201,7 +205,6 @@ def remove_zeros():
         df = df[~mask]
         df.to_csv(data_file, index=False)
         print(df)
-
 
 sanitise_input()
 
