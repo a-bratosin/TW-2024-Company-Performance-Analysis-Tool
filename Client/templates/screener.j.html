@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Company-Performance-Analysis-Tool</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+
+    <body>
+        <header>
+            <h1><span>Company Performance Analysis Tool</span></h1>
+        </header>
+
+        <main>
+            <h2>Statistics for {{ name }}</h2>
+            <p>According to available data, we have predicted the following for years 2024-2026:</p>
+
+            <div class="table-container outlined">
+                <table>
+                    {# Year,Cifra Afaceri,Profit Net,Datorii,Active Imobilizate,Active Circulante,Capitaluri Proprii,Angajati #}
+                    <tr>
+                        <th>Year</th>
+                        <td>{{ data[-3][0] }}</td>
+                        <td>{{ data[-2][0] }}</td>
+                        <td>{{ data[-1][0] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Turnover</th>
+                        <td>{{ data[-3][1] }}</td>
+                        <td>{{ data[-2][1] }}</td>
+                        <td>{{ data[-1][1] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Net profit</th>
+                        <td>{{ data[-3][2] }}</td>
+                        <td>{{ data[-2][2] }}</td>
+                        <td>{{ data[-1][2] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Debt</th>
+                        <td>{{ data[-3][3] }}</td>
+                        <td>{{ data[-2][3] }}</td>
+                        <td>{{ data[-1][3] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Fixed assets</th>
+                        <td>{{ data[-3][4] }}</td>
+                        <td>{{ data[-2][4] }}</td>
+                        <td>{{ data[-1][4] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Circulating assets</th>
+                        <td>{{ data[-3][5] }}</td>
+                        <td>{{ data[-2][5] }}</td>
+                        <td>{{ data[-1][5] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Owned capital</th>
+                        <td>{{ data[-3][6] }}</td>
+                        <td>{{ data[-2][6] }}</td>
+                        <td>{{ data[-1][6] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Employees</th>
+                        <td>{{ data[-3][7] }}</td>
+                        <td>{{ data[-2][7] }}</td>
+                        <td>{{ data[-1][7] }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="canvas-container outlined">
+                <canvas id="evolution-chart"></canvas>
+            </div>
+
+            <button id="return-button">Return</button>
+        </main>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="{{ url_for('static', filename='screener.js') }}"></script>
+        <script>init({{ labels }}, {{ values }})</script>
+    </body>
+</html>

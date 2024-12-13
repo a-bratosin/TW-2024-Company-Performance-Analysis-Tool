@@ -1,26 +1,28 @@
-from flask import Flask, request, jsonify, render_template
-import joblib
+from flask import Flask, render_template
 import numpy as np
-from ..Model.PredictionModel import PredictionModel
+from predictors import PredictionModel
 
 app = Flask(__name__)
 
-model: PredictionModel = joblib.load('../Model/model_obj.pkl')
-prediction = None
+model = PredictionModel()
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
-@app.route('/post/<string:company>')
-def get_by_name(company):
+@app.route('/predict/<string:company>')
+def get_by_name(company: str):
     cui = model.find(company)
-    return get_by_id(cui)
+    return get_by_id(cui, company)
 
-@app.route('/post/<int:cui>')
-def get_by_id(cui):
-    prediction = model.predict(cui)
-    return render_template('screener.html', data=prediction)
+@app.route('/predict/<int:cui>')
+def get_by_id(cui: int, name: str = None):
+    if name == None:
+        name = model.name_of(cui)
+    data = model.predict(cui)
+    labels = [row[0] for row in data]
+    values = [row[1] for row in data]
+    return render_template('screener.j.html', name=name, labels=labels, values=values, data=data)
 
 if __name__ == '__main__':
     app.run(debug=True)

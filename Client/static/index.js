@@ -1,6 +1,10 @@
-let button = document.getElementById('search_button')
-let field = document.getElementById('search_field')
+let button = document.getElementById('search-button')
+let field = document.getElementById('search-field')
 button.addEventListener('click', function () {
-    let route = 'post/'.concat(field.value)
+    let value = field.value
+    if (!value.trim().length) {
+        return false
+    }
+    let route = 'predict/'.concat(value)
     window.location.assign(route)
 })
